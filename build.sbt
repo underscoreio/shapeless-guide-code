@@ -30,22 +30,32 @@ lazy val representations =
   project.in(file("representations"))
   .settings(cmds())
 
-lazy val generic =
-  project.in(file("generic"))
+lazy val csv =
+  project.in(file("csv"))
   .settings(cmds())
 
-lazy val literalTypes =
+lazy val literaltypes =
   project.in(file("literaltypes"))
   .settings(cmds())
 
-lazy val labelledGeneric =
-  project.in(file("labelledgeneric"))
-  .settings(cmds("shapeless.labelled.FieldType"))
+lazy val json =
+  project.in(file("json"))
+  .settings(cmds("shapeless.labelled._"))
+
+lazy val numfields =
+  project.in(file("numfields"))
+  .settings(cmds("shapeless.ops.nat._"))
+
+lazy val migrations =
+  project.in(file("migrations"))
+  .settings(cmds("shapeless.ops.hlist._"))
 
 lazy val root = project.in(file("."))
   .aggregate(
     representations,
-    generic,
-    literalTypes,
-    labelledGeneric
+    csv,
+    literaltypes,
+    json,
+    numfields,
+    migrations
   )
