@@ -44,7 +44,7 @@ lazy val labelledGeneric =
 
 lazy val root = project.in(file("."))
   .aggregate(
-    repr,
+    representations,
     generic,
     literalTypes,
     labelledGeneric
