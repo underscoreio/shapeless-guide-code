@@ -19,19 +19,24 @@ libraryDependencies in Global ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.6" % Test
 )
 
+val initialCommandsSetting =
+  initialCommands in console := s"""
+    |import shapeless._
+    |import Main._
+  """.trim.stripMargin
+
 lazy val repr = project.in(file("repr"))
-  .settings(
-    initialCommands in console := s"""
-      |import shapeless.Generic
-      |import Main._
-    """.trim.stripMargin
-  )
+  .settings(initialCommandsSetting)
 
 lazy val generic = project.in(file("generic"))
-  .settings(
-    initialCommands in console := s"""
-      |import shapeless.Generic
-      |import shapeless.{HList, ::, HNil}
-      |import Main._
-    """.trim.stripMargin
+  .settings(initialCommandsSetting)
+
+lazy val labelledGeneric = project.in(file("labelledgeneric"))
+  .settings(initialCommandsSetting)
+
+lazy val root = project.in(file("."))
+  .aggregate(
+    repr,
+    generic,
+    labelledGeneric
   )
