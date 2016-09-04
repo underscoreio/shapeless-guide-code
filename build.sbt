@@ -27,3 +27,11 @@ lazy val repr = project.in(file("repr"))
     """.trim.stripMargin
   )
 
+lazy val generic = project.in(file("generic"))
+  .settings(
+    initialCommands in console := s"""
+      |import shapeless.Generic
+      |import shapeless.{HList, ::, HNil}
+      |import Main._
+    """.trim.stripMargin
+  )

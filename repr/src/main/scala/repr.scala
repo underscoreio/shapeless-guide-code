@@ -1,8 +1,7 @@
-case class Employee(name: String, number: Int, manager: Boolean)
-
-case class IceCream(name: String, numCherries: Int, inCone: Boolean)
-
 object Main {
+  case class Employee(name: String, number: Int, manager: Boolean)
+  case class IceCream(name: String, numCherries: Int, inCone: Boolean)
+
   val employee = Employee("Bill", 1, true)
   val iceCream = IceCream("Cornetto", 0, true)
 
