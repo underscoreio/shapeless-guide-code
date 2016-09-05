@@ -93,10 +93,10 @@ object Main {
   case class KitchenSinkB(c: Boolean, z: Option[String], a: String)
 
   def main(args: Array[String]): Unit = {
-    println(SameA("abc", 123, true).migrateTo[SameA])
-    println(DropFieldA("abc", 123, true).migrateTo[DropFieldA])
-    println(AddFieldA("abc").migrateTo[AddFieldA])
-    println(ReorderA("abc", 123).migrateTo[ReorderA])
+    println(SameA("abc", 123, true).migrateTo[SameB])
+    println(DropFieldA("abc", 123, true).migrateTo[DropFieldB])
+    println(AddFieldA("abc").migrateTo[AddFieldB])
+    println(ReorderA("abc", 123).migrateTo[ReorderB])
     println(KitchenSinkA("abc", 123, true).migrateTo[KitchenSinkB])
   }
 }
