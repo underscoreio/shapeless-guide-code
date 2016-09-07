@@ -19,36 +19,26 @@ libraryDependencies in Global ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.6" % Test
 )
 
-def cmds(extraImports: String *) =
-  initialCommands in console := s"""
-    |import shapeless._
-    |${extraImports.map("import " + _).mkString("\n")}
-    |import Main._
-  """.trim.stripMargin
+lazy val common =
+  project.in(file("common"))
 
 lazy val representations =
-  project.in(file("representations"))
-  .settings(cmds())
+  project.in(file("representations")).dependsOn(common)
 
 lazy val csv =
-  project.in(file("csv"))
-  .settings(cmds())
+  project.in(file("csv")).dependsOn(common)
 
 lazy val literaltypes =
-  project.in(file("literaltypes"))
-  .settings(cmds())
+  project.in(file("literaltypes")).dependsOn(common)
 
 lazy val json =
-  project.in(file("json"))
-  .settings(cmds("shapeless.labelled._"))
+  project.in(file("json")).dependsOn(common)
 
 lazy val numfields =
-  project.in(file("numfields"))
-  .settings(cmds("shapeless.ops.nat._"))
+  project.in(file("numfields")).dependsOn(common)
 
 lazy val migrations =
-  project.in(file("migrations"))
-  .settings(cmds("shapeless.ops.hlist._"))
+  project.in(file("migrations")).dependsOn(common)
 
 lazy val root = project.in(file("."))
   .aggregate(

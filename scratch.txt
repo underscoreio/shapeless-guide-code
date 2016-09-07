@@ -1,5 +1,3 @@
-/*
-
 final case class Employee(
   name    : String,
   number  : Int,
@@ -40,5 +38,3 @@ val optShapes: List[Option[Shape]] =
     Some(Circle(6)),
     None
   )
-
-*/

@@ -10,12 +10,8 @@ final case class IceCream(
   inCone      : Boolean
 )
 
-object Main {
+object Main extends Demo {
   val employee = Employee("Bill", 1, true)
 
   val iceCream = IceCream("Cornetto", 0, true)
-
-  def main(args: Array[String]): Unit = {
-    // TODO: Write code
-  }
 }
