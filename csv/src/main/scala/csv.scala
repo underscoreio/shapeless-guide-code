@@ -1,21 +1,30 @@
 trait CsvEncoder[A] {
-  val width: Int
   def encode(value: A): List[String]
 }
 
 object CsvEncoder {
-  def apply(implicit encoder: CsvEncoder[A]): CsvEncoder[A] =
+  def apply[A](implicit encoder: CsvEncoder[A]): CsvEncoder[A] =
     encoder
 
   def pure[A](func: A => List[String]): CsvEncoder[A] =
     new CsvEncoder[A] {
-      def apply(value: A): List[String] =
+      def encode(value: A): List[String] =
         func(value)
     }
+
+  // implicit val stringEnc: CsvEncoder[String] =
+  //   pure(str => List(str))
+
+  // implicit val intEnc: CsvEncoder[Int] =
+  //   pure(num => List(num.toString))
+
+  // implicit val booleanEnc: CsvEncoder[Boolean] =
+  //   pure(bool => List(if(bool) "yes" else "no"))
 }
 
-object Main {
-  def main(args: Array[String]): Unit = {
-    // TODO: Write code
-  }
+object Main extends Demo {
+  def encodeCsv[A](value: A)(implicit enc: CsvEncoder[A]): List[String] =
+    enc.encode(value)
+
+  // println(encodeCsv(true))
 }
