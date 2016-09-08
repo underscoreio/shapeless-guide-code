@@ -10,8 +10,12 @@ final case class IceCream(
   inCone      : Boolean
 )
 
+
+
 object Main extends Demo {
   val employee = Employee("Bill", 1, true)
-
   val iceCream = IceCream("Cornetto", 0, true)
+
+  // println(employee)
+  // println(iceCream)
 }
