@@ -1,10 +1,8 @@
-object Main {
-  import shapeless.Witness
-  import shapeless.labelled.{KeyTag, FieldType}
-  import shapeless.syntax.singleton._
+import shapeless.Witness
+import shapeless.labelled.{KeyTag, FieldType}
+import shapeless.syntax.singleton._
 
-
-
+object Main extends Demo {
   // A brief introduction to type-level tagging:
 
   // Start with a plain Int:
@@ -25,6 +23,10 @@ object Main {
   implicitly[y.type <:< Int]
   implicitly[y.type <:< Tag]
 
+  println("x " + x)
+  println("y " + y)
+  println("z " + z)
+
 
 
   // A brief introduction to literal/singleton types:
@@ -38,6 +40,10 @@ object Main {
   // This type is a subtype of Int. The only permitted value is 42.
   val theAnswer: 42 = 6 * 7  // syntax for Typelevel Scala 2.11.8+ or Lightbend Scala 2.12.1+
   val theAnswer2 = 42.narrow // syntax for older Scala compilers
+
+  println("Some number " + someNumber)
+  println("The answer " + theAnswer)
+
 
 
 
@@ -64,17 +70,6 @@ object Main {
   def getTagAsValue[K, A](value: FieldType[K, A])(implicit witness: Witness.Aux[K]): K =
     witness.value
 
-
-
-  def main(args: Array[String]): Unit = {
-    println("x " + x)
-    println("y " + y)
-    println("z " + z)
-
-    println("Some number " + someNumber)
-    println("The answer " + theAnswer)
-
-    println("Value of tagged expression: " + getFieldValue(tagged))
-    println("Tag from tagged expression: " + getTagAsValue(tagged))
-  }
+  println("Value of tagged expression: " + getFieldValue(tagged))
+  println("Tag from tagged expression: " + getTagAsValue(tagged))
 }

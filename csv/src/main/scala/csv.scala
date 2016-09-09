@@ -1,28 +1,24 @@
+import shapeless.{HList, ::, HNil}
+import shapeless.Lazy
+import shapeless.{Coproduct, :+:, CNil, Inl, Inr}
+import shapeless.Generic
+
+
+
 trait CsvEncoder[A] {
   val width: Int
   def encode(value: A): List[String]
 }
 
-object CsvEncoder extends CsvEncoderFunctions
-  with CsvEncoderInstances
 
-trait CsvEncoderFunctions {
-  def apply[A](implicit encoder: CsvEncoder[A]): CsvEncoder[A] =
-    encoder
 
-  def writeCsv[A](values: List[A])(implicit encoder: CsvEncoder[A]): String =
-    values.map(value => encoder.encode(value).mkString(",")).mkString("\n")
-
+object CsvEncoder {
   def pure[A](w: Int)(func: A => List[String]): CsvEncoder[A] =
     new CsvEncoder[A] {
       val width = w
       def encode(value: A): List[String] =
         func(value)
     }
-}
-
-trait CsvEncoderInstances extends LowPriorityCsvEncoderInstances {
-  self: CsvEncoderFunctions =>
 
   implicit val stringEncoder: CsvEncoder[String] =
     pure(1)(str => List(str))
@@ -38,12 +34,6 @@ trait CsvEncoderInstances extends LowPriorityCsvEncoderInstances {
 
   implicit def optionEncoder[A](implicit encoder: CsvEncoder[A]): CsvEncoder[Option[A]] =
     pure(encoder.width)(opt => opt.map(encoder.encode).getOrElse(List.fill(encoder.width)("")))
-}
-
-trait LowPriorityCsvEncoderInstances {
-  self: CsvEncoderFunctions =>
-
-  import shapeless.{HList, ::, HNil, Lazy}
 
   implicit val hnilEncoder: CsvEncoder[HNil] =
     pure(0)(hnil => Nil)
@@ -58,8 +48,6 @@ trait LowPriorityCsvEncoderInstances {
         hEncoder.value.encode(h) ++ tEncoder.encode(t)
     }
 
-  import shapeless.{Coproduct, :+:, CNil, Inl, Inr}
-
   implicit val cnilEncoder: CsvEncoder[CNil] =
     pure(0)(cnil => ???)
 
@@ -73,8 +61,6 @@ trait LowPriorityCsvEncoderInstances {
       case Inr(t) => List.fill(hEncoder.value.width)("") ++ tEncoder.encode(t)
     }
 
-  import shapeless.Generic
-
   implicit def genericEncoder[A, R](
     implicit
     gen: Generic.Aux[A, R],
@@ -83,7 +69,13 @@ trait LowPriorityCsvEncoderInstances {
     pure(enc.value.width)(a => enc.value.encode(gen.to(a)))
 }
 
-object Main {
+object Main extends Demo {
+  def encodeCsv[A](value: A)(implicit enc: CsvEncoder[A]): List[String] =
+    enc.encode(value)
+
+  def writeCsv[A](values: List[A])(implicit enc: CsvEncoder[A]): String =
+    values.map(value => enc.encode(value).mkString(",")).mkString("\n")
+
   sealed trait Shape
   final case class Rectangle(width: Double, height: Double) extends Shape
   final case class Circle(radius: Double) extends Shape
@@ -106,10 +98,8 @@ object Main {
       None
     )
 
-  def main(args: Array[String]): Unit = {
-    println("Shapes " + shapes)
-    println("Shapes as CSV:\n" + CsvEncoder.writeCsv(shapes))
-    println("Optional shapes " + optShapes)
-    println("Optional shapes as CSV:\n" + CsvEncoder.writeCsv(optShapes))
-  }
+  println("Shapes " + shapes)
+  println("Shapes as CSV:\n" + writeCsv(shapes))
+  println("Optional shapes " + optShapes)
+  println("Optional shapes as CSV:\n" + writeCsv(optShapes))
 }

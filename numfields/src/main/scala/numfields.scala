@@ -1,11 +1,24 @@
 import shapeless._
 import shapeless.ops.nat._
 
+/**
+ * Type class calculating
+ * the maximum number of fields
+ * in instances of any ADT `A`.
+ *
+ * This kind of approach could be useful,
+ * e.g., for preallocating space in a buffer.
+ * However, it doesn't handle a lot of complexity.
+ * It only takes fields in products into account.
+ * It doesn't consider things like Lists etc.
+ */
 trait NumFields[A] {
   type Out <: Nat
   def value(implicit toInt: ToInt[Out]): Int =
     toInt.apply()
 }
+
+
 
 object NumFields extends NumFieldsInstances
 
@@ -52,14 +65,16 @@ trait LowPriorityNumFieldsInstances extends NumFieldsFunctions {
     new NumFields[A] { type Out = Nat._1 }
 }
 
+
+
 sealed trait Shape
 final case class Rectangle(width: Double, height: Double) extends Shape
 final case class Circle(radius: Double) extends Shape
 
-object Main {
-  def main(args: Array[String]): Unit = {
-    println("Number of fields in Shape: "     + NumFields[Shape].value)
-    println("Number of fields in Rectangle: " + NumFields[Rectangle].value)
-    println("Number of fields in Circle: "    + NumFields[Circle].value)
-  }
+
+
+object Main extends Demo {
+  println("Number of fields in Shape: "     + NumFields[Shape].value)
+  println("Number of fields in Rectangle: " + NumFields[Rectangle].value)
+  println("Number of fields in Circle: "    + NumFields[Circle].value)
 }

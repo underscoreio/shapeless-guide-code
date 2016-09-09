@@ -1,3 +1,11 @@
+import shapeless.{HList, ::, HNil}
+import shapeless.{Coproduct, :+:, CNil, Inl, Inr}
+import shapeless.{Lazy}
+import shapeless.{LabelledGeneric, Witness}
+import shapeless.labelled.FieldType
+
+
+/** JSON ADT */
 sealed abstract class Json
 final case class JsonObject(fields: List[(String, Json)]) extends Json
 final case class JsonArray(items: List[Json]) extends Json
@@ -6,10 +14,9 @@ final case class JsonNumber(value: Double) extends Json
 final case class JsonBoolean(value: Boolean) extends Json
 case object JsonNull extends Json
 
-object Json {
-  def encode[A](value: A)(implicit encoder: JsonEncoder[A]): Json =
-    encoder.encode(value)
 
+/** Stringification methods */
+object Json {
   def stringify(json: Json): String = json match {
     case JsonObject(fields) => "{" + fields.map(stringifyField).mkString(",") + "}"
     case JsonArray(items)   => "[" + items.map(stringify).mkString(",") + "]"
@@ -28,36 +35,49 @@ object Json {
     "\"" + str.replaceAll("\"", "\\\\\"") + "\""
 }
 
+
+
+/**
+ * Type class for encoding a value of type A as JSON.
+ */
 trait JsonEncoder[A] {
   def encode(value: A): Json
 }
 
+/**
+ * Specialization of JsonEncoder
+ * for encoding as a JSON object.
+ *
+ * We introduce this because
+ * the encoder for :: has to asemble an object
+ * from fields form the head and tail.
+ * Having JsonObjectEncoder avoids annoying
+ * pattern matching to ensure the encoded tail
+ * is indeed an object.
+ */
 trait JsonObjectEncoder[A] extends JsonEncoder[A] {
   def encode(value: A): JsonObject
 }
 
-object JsonEncoder extends JsonEncoderFunctions
-  with JsonEncoderInstances
 
-trait JsonEncoderFunctions {
-  def apply[A](implicit encoder: JsonEncoder[A]): JsonEncoder[A] =
-    encoder
 
+
+object JsonEncoder {
+  /** Helper: create a JsonEncoder from a plain function */
   def pure[A](func: A => Json): JsonEncoder[A] =
     new JsonEncoder[A] {
       def encode(value: A): Json =
         func(value)
     }
 
+  /** Helper: create a JsonObjectEncoder from a plain function */
   def pureObj[A](func: A => JsonObject): JsonObjectEncoder[A] =
     new JsonObjectEncoder[A] {
       def encode(value: A): JsonObject =
         func(value)
     }
-}
 
-trait JsonEncoderInstances extends LowPriorityJsonEncoderInstances {
-  self: JsonEncoderFunctions =>
+  // JsonEncoder instances for primitive types:
 
   implicit val stringEncoder: JsonEncoder[String] =
     pure(str => JsonString(str))
@@ -76,13 +96,18 @@ trait JsonEncoderInstances extends LowPriorityJsonEncoderInstances {
 
   implicit def listEncoder[A](implicit encoder: JsonEncoder[A]): JsonEncoder[List[A]] =
     pure(list => JsonArray(list.map(encoder.encode)))
-}
 
-trait LowPriorityJsonEncoderInstances {
-  self: JsonEncoderFunctions =>
-
-  import shapeless.{HList, ::, HNil, Lazy, Witness}
-  import shapeless.labelled.FieldType
+  // JsonEncoder instances for HLists.
+  //
+  // Notice that hlistEncoder produces an instance for:
+  //
+  //     JsonObjectEncoder[FieldType[K, H] :: T]
+  //
+  // FieldType[K, H] represents a type H tagged with K.
+  // LabelledGeneric tags its component types
+  // with the Symbolic literal types of the field names,
+  // so we can use a Witness.Aux[K] to retrieve
+  // the field name as a value.
 
   implicit val hnilEncoder: JsonObjectEncoder[HNil] =
     pureObj(hnil => JsonObject(Nil))
@@ -100,7 +125,11 @@ trait LowPriorityJsonEncoderInstances {
         JsonObject(hField :: tFields)
     }
 
-  import shapeless.{Coproduct, :+:, CNil, Inl, Inr}
+  // JsonEncoder instances for Coproducts:
+  //
+  // The notes above for hlistEncoder also apply to
+  // coproductEncoder, except that
+  // K represents a type name, not a field name.
 
   implicit val cnilEncoder: JsonObjectEncoder[CNil] =
     pureObj(cnil => ???)
@@ -116,7 +145,7 @@ trait LowPriorityJsonEncoderInstances {
       case Inr(t) => tEncoder.encode(t)
     }
 
-  import shapeless.LabelledGeneric
+  // JsonEncoder instance for LabelledGeneric:
 
   implicit def genericEncoder[A, R](
     implicit
@@ -126,8 +155,11 @@ trait LowPriorityJsonEncoderInstances {
     pure(a => enc.value.encode(gen.to(a)))
 }
 
-object Main {
-  import shapeless._
+object Main extends Demo {
+  // Entry point for JsonEncoder:
+
+  def encodeJson[A](value: A)(implicit encoder: JsonEncoder[A]): Json =
+    encoder.encode(value)
 
   sealed trait Shape
   final case class Rectangle(width: Double, height: Double) extends Shape
@@ -151,10 +183,8 @@ object Main {
       None
     )
 
-  def main(args: Array[String]): Unit = {
-    println("Shapes " + shapes)
-    println("Shapes as JSON: " + Json.stringify(Json.encode(shapes)))
-    println("Optional shapes " + optShapes)
-    println("Optional shapes as JSON: " + Json.stringify(Json.encode(optShapes)))
-  }
+  println("Shapes " + shapes)
+  println("Shapes as JSON: " + Json.stringify(encodeJson(shapes)))
+  println("Optional shapes " + optShapes)
+  println("Optional shapes as JSON: " + Json.stringify(encodeJson(optShapes)))
 }
