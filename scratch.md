@@ -75,8 +75,8 @@ TREE
 
 ```scala
 sealed trait Tree
-final case class Branch(left: Tree, right: Tree)
-final case class Leaf(value: Int)
+final case class Branch(left: Tree, right: Tree) extends Tree
+final case class Leaf(value: Int) extends Tree
 ```
 
 MIGRATIONS
