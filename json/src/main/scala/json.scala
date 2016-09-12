@@ -58,6 +58,8 @@ object JsonEncoder {
         func(value)
     }
 
+
+
   // implicit val stringEnc: JsonEncoder[String] =
   //   pure(str => JsonString(str))
 
@@ -69,13 +71,60 @@ object JsonEncoder {
 
   // implicit val booleanEnc: JsonEncoder[Boolean] =
   //   pure(bool => JsonBoolean(bool))
+
+
+
+  // implicit val hnilEnc: JsonObjectEncoder[HNil] =
+  //   pureObj(hnil => JsonObject(Nil))
+
+  // implicit def hlistEnc // ...
+
+  // implicit val cnilEnc: JsonObjectEncoder[CNil] =
+  //   pureObj(cnil => ???)
+
+  // implicit def coproductEnc // ...
+
+  // implicit def genericEnc // ...
 }
+
+
+
+final case class Employee(
+  name    : String,
+  number  : Int,
+  manager : Boolean
+)
+
+final case class IceCream(
+  name        : String,
+  numCherries : Int,
+  inCone      : Boolean
+)
+
+sealed trait Shape
+
+final case class Rectangle(
+  width: Double,
+  height: Double
+) extends Shape
+
+final case class Circle(
+  radius: Double
+) extends Shape
 
 
 
 object Main extends Demo {
 
-  // TODO: Put demo data here
+  val employee = Employee("Alice", 1, true)
+  val employee = Employee("Bob", 2, false)
+  val employee = Employee("Charlie", 3, false)
+
+  val iceCream = IceCream("Cornetto", 0, true)
+  val iceCream = IceCream("Sundae", 1, false)
+
+  val shape1: Shape = Rectangle(3, 4)
+  val shape2: Shape = Circle(1)
 
 }
 
