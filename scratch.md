@@ -14,16 +14,17 @@ final case class IceCream(
   inCone      : Boolean
 )
 
-val employee = Employee("Bill", 1, true)
-val employee = Employee("Milton", 3, false)
+val employee = Employee("Alice", 1, true)
+val employee = Employee("Bob", 2, false)
+val employee = Employee("Charlie", 3, false)
 
 val iceCream = IceCream("Cornetto", 0, true)
 val iceCream = IceCream("Sundae", 1, false)
 
 val employees = List(
-  Employee("Bill", 1, true),
-  Employee("Peter", 2, false),
-  Employee("Milton", 3, false)
+  Employee("Alice", 1, true),
+  Employee("Bob", 2, false),
+  Employee("Charlie", 3, false)
 )
 
 val iceCreams = List(
