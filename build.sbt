@@ -37,6 +37,9 @@ lazy val json =
 lazy val numfields =
   project.in(file("numfields")).dependsOn(common)
 
+lazy val random =
+  project.in(file("random")).dependsOn(common)
+
 lazy val migrations =
   project.in(file("migrations")).dependsOn(common)
 
@@ -47,5 +50,6 @@ lazy val root = project.in(file("."))
     literaltypes,
     json,
     numfields,
+    random,
     migrations
   )
