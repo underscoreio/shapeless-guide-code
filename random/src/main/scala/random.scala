@@ -1,6 +1,6 @@
 import shapeless._
-import shapeless.ops.coproduct.Length
-import shapeless.ops.nat.ToInt
+import shapeless.ops.coproduct
+import shapeless.ops.nat
 
 trait Random[A] {
   def get: A
@@ -25,7 +25,7 @@ object Random {
     createRandom(('A'.toInt + scala.util.Random.nextInt(26)).toChar)
 
   implicit val stringRandom: Random[String] =
-    createRandom { 
+    createRandom {
       (0 to intRandom.get).
         map(_ => charRandom.get).mkString
     }
@@ -48,7 +48,7 @@ object Random {
     implicit
     hRandom: Random[H],
     tRandom: Lazy[Random[T]]
-  ): Random[H :: T] = 
+  ): Random[H :: T] =
     createRandom {
       hRandom.get :: tRandom.value.get
     }
@@ -62,8 +62,8 @@ object Random {
     implicit
     hRandom: Random[H],
     tRandom: Lazy[Random[T]],
-    tLength: Length.Aux[T, L],
-    tLengthAsInt: ToInt[L]
+    tLength: coproduct.Length.Aux[T, L],
+    tLengthAsInt: nat.ToInt[L]
   ): Random[H :+: T] = {
     val len  = 1 + tLengthAsInt()
     val prob = 1.0 / len
