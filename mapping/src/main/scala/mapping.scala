@@ -29,7 +29,7 @@ object Main extends Demo {
   }
 
   val latitude: Index[Double] = Index("latitude", _.location.lat)
-  val longitude: Index[Double] = Index("longiture", _.location.lng)
+  val longitude: Index[Double] = Index("longitude", _.location.lng)
   val temperature: Index[Int] = Index("temperature", _.temperature)
   val phosphate: Index[Double] = Index("phosphate", _.phosphate)
   val coliforms: Index[Boolean] = Index("coliforms", _.coliforms)
@@ -40,26 +40,19 @@ object Main extends Demo {
     temperature ::
     phosphate   ::
     coliforms   ::
-    HNil
+    Nil
 
-  object applyIndex extends Poly1 {
-    implicit def indexCase[A]: Case.Aux[Index[A], (String, A)] =
-      at(index => (index.id, index.apply(waterQuality)))
-  }
+  def applyIndex(index: Index[_]): Any =
+    (index.id, index.apply(waterQuality))
 
   val attributes =
     allIndices.map(applyIndex)
 
-  object jsonValue extends Poly1 {
-    implicit def anyCase[A: Encoder]: Case.Aux[(String, A), (String, Json)] =
-      at { case (id, value) => (id, value.asJson) }
-  }
-
-  val jsonAttributes =
-    attributes.map(jsonValue).toList.toMap.asJson
+  // val jsonAttributes =
+  //   attributes.map(???).toMap.asJson
 
   println(waterQuality)
   println(allIndices)
   println(attributes)
-  println(jsonAttributes)
+  // println(jsonAttributes)
 }
