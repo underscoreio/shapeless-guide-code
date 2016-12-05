@@ -13,10 +13,13 @@ scalacOptions in Global ++= Seq(
 )
 
 libraryDependencies in Global ++= Seq(
-  "com.chuusai"   %% "shapeless" % "2.3.2",
-  "org.typelevel" %% "cats"      % "0.7.0",
-  "org.scalactic" %% "scalactic" % "2.2.6" % Test,
-  "org.scalatest" %% "scalatest" % "2.2.6" % Test
+  "com.chuusai"   %% "shapeless"     % "2.3.2",
+  "org.typelevel" %% "cats"          % "0.7.0",
+  "io.circe"      %% "circe-core"    % "0.7.0-M1",
+  "io.circe"      %% "circe-generic" % "0.7.0-M1",
+  "io.circe"      %% "circe-parser"  % "0.7.0-M1",
+  "org.scalactic" %% "scalactic"     % "2.2.6" % Test,
+  "org.scalatest" %% "scalatest"     % "2.2.6" % Test
 )
 
 lazy val common =
@@ -43,6 +46,9 @@ lazy val random =
 lazy val migrations =
   project.in(file("migrations")).dependsOn(common)
 
+lazy val mapping =
+  project.in(file("mapping")).dependsOn(common)
+
 lazy val root = project.in(file("."))
   .aggregate(
     representations,
@@ -51,5 +57,6 @@ lazy val root = project.in(file("."))
     json,
     numfields,
     random,
-    migrations
+    migrations,
+    mapping
   )
