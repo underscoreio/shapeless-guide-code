@@ -1,5 +1,7 @@
 # Shapeless Guide Code
 
+Copyright 2016-17 Dave Gurnell. Licensed Apache 2.0.
+
 This repository contains code for the main examples in
 [The Type Astronaut's Guide to Shapeless][book].
 
