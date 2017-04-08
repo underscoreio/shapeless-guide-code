@@ -116,12 +116,12 @@ final case class Circle(
 
 object Main extends Demo {
 
-  val employee = Employee("Alice", 1, true)
-  val employee = Employee("Bob", 2, false)
-  val employee = Employee("Charlie", 3, false)
+  val employee1 = Employee("Alice", 1, true)
+  val employee2 = Employee("Bob", 2, false)
+  val employee3 = Employee("Charlie", 3, false)
 
-  val iceCream = IceCream("Cornetto", 0, true)
-  val iceCream = IceCream("Sundae", 1, false)
+  val iceCream1 = IceCream("Cornetto", 0, true)
+  val iceCream2 = IceCream("Sundae", 1, false)
 
   val shape1: Shape = Rectangle(3, 4)
   val shape2: Shape = Circle(1)
