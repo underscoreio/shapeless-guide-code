@@ -25,9 +25,8 @@ object Random {
     createRandom(('A'.toInt + scala.util.Random.nextInt(26)).toChar)
 
   implicit val stringRandom: Random[String] =
-    createRandom { 
-      (0 to intRandom.get).
-        map(_ => charRandom.get).mkString
+    createRandom {
+      (0 to intRandom.get).map(_ => charRandom.get).mkString
     }
 
   implicit def genericRandom[A, R](
@@ -48,7 +47,7 @@ object Random {
     implicit
     hRandom: Random[H],
     tRandom: Lazy[Random[T]]
-  ): Random[H :: T] = 
+  ): Random[H :: T] =
     createRandom {
       hRandom.get :: tRandom.value.get
     }
@@ -62,18 +61,17 @@ object Random {
     implicit
     hRandom: Random[H],
     tRandom: Lazy[Random[T]]
-  ): Random[H :+: T] = {
+  ): Random[H :+: T] =
     createRandom {
       // TODO: Modify this probability
       // to ensure all tails of this coproduct
       // are weighted equally!
-      if(scala.util.Random.nextDouble < 0.5) {
+      if (scala.util.Random.nextDouble < 0.5) {
         Inl(hRandom.get)
       } else {
         Inr(tRandom.value.get)
       }
     }
-  }
 }
 
 object Main extends Demo {

@@ -1,17 +1,13 @@
 import cats.Monoid
 import cats.instances.all._
 import shapeless._
-import shapeless.labelled.{field, FieldType}
+import shapeless.labelled.{ field, FieldType }
 import shapeless.ops.hlist
 import shapeless.ops.coproduct
-
-
 
 trait Migration[A, B] {
   def apply(original: A): B
 }
-
-
 
 object Migration {
   def pure[A, B](func: A => B): Migration[A, B] =
@@ -21,8 +17,6 @@ object Migration {
     }
 
 }
-
-
 
 case class SameA(a: String, b: Int, c: Boolean)
 case class SameB(a: String, b: Int, c: Boolean)
@@ -38,8 +32,6 @@ case class ReorderB(z: Int, a: String)
 
 case class KitchenSinkA(a: String, b: Int, c: Boolean)
 case class KitchenSinkB(c: Boolean, z: Option[String], a: String)
-
-
 
 object Main extends Demo {
   implicit class MigrationOps[A](original: A) {

@@ -1,0 +1,9 @@
+-Dfile.encoding=UTF8 
+-XX:MaxMetaspaceSize=1g
+-Xss4M 
+-Xms512M 
+-Xmx4G 
+-XX:+TieredCompilation 
+-XX:+UseNUMA 
+-XX:+UseParallelGC 
+-XX:+CMSClassUnloadingEnabled

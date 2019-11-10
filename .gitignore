@@ -54,6 +54,11 @@ project/plugins/project/
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
 
+#VSCode
+.bloop
+.metals
+project/.bloop
+
 ## File-based project format:
 *.iws
 

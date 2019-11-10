@@ -1,25 +1,18 @@
-scalaOrganization in ThisBuild := "org.typelevel"
-scalaVersion      in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.13.1"
 
-scalacOptions in Global ++= Seq(
-  "-deprecation",
-  "-encoding", "UTF-8",
-  "-unchecked",
-  "-feature",
-  "-Xlint",
-  "-Xfatal-warnings",
-  "-Ywarn-dead-code",
-  "-Yliteral-types"
+// Refine scalac params from tpolecat
+scalacOptions --= Seq(
+  "-Xfatal-warnings"
 )
 
 libraryDependencies in Global ++= Seq(
-  "com.chuusai"   %% "shapeless"     % "2.3.2",
-  "org.typelevel" %% "cats"          % "0.7.0",
-  "io.circe"      %% "circe-core"    % "0.7.0-M1",
-  "io.circe"      %% "circe-generic" % "0.7.0-M1",
-  "io.circe"      %% "circe-parser"  % "0.7.0-M1",
-  "org.scalactic" %% "scalactic"     % "2.2.6" % Test,
-  "org.scalatest" %% "scalatest"     % "2.2.6" % Test
+  "com.chuusai"   %% "shapeless"     % "2.3.3",
+  "org.typelevel" %% "cats-core"     % "2.0.0",
+  "io.circe"      %% "circe-core"    % "0.12.3",
+  "io.circe"      %% "circe-generic" % "0.12.3",
+  "io.circe"      %% "circe-parser"  % "0.12.3",
+  "org.scalactic" %% "scalactic"     % "3.0.8" % Test,
+  "org.scalatest" %% "scalatest"     % "3.0.8" % Test
 )
 
 lazy val common =
@@ -52,7 +45,8 @@ lazy val migrations =
 lazy val mapping =
   project.in(file("mapping")).dependsOn(common)
 
-lazy val root = project.in(file("."))
+lazy val root = project
+  .in(file("."))
   .aggregate(
     helloworld,
     representations,
@@ -64,3 +58,15 @@ lazy val root = project.in(file("."))
     migrations,
     mapping
   )
+
+addCompilerPlugin(scalafixSemanticdb)
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+
+// Aliases
+addCommandAlias("rel", "reload")
+addCommandAlias("com", "all compile test:compile it:compile")
+addCommandAlias("lint", "; compile:scalafix --check ; test:scalafix --check")
+addCommandAlias("fix", "all compile:scalafix test:scalafix")
+addCommandAlias("fmt", "all scalafmtSbt scalafmtAll")
+addCommandAlias("chk", "all scalafmtSbtCheck scalafmtCheckAll")
+addCommandAlias("cov", "; clean; coverage; test; coverageReport")
