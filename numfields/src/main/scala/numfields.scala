@@ -54,12 +54,12 @@ trait LowPriorityNumFieldsInstances extends NumFieldsFunctions {
 
 sealed trait Shape
 final case class Rectangle(width: Double, height: Double) extends Shape
-final case class Circle(radius: Double) extends Shape
+final case class Circle(radius: Double)                   extends Shape
 
 object Main {
   def main(args: Array[String]): Unit = {
-    println("Number of fields in Shape: "     + NumFields[Shape].value)
+    println("Number of fields in Shape: " + NumFields[Shape].value)
     println("Number of fields in Rectangle: " + NumFields[Rectangle].value)
-    println("Number of fields in Circle: "    + NumFields[Circle].value)
+    println("Number of fields in Circle: " + NumFields[Circle].value)
   }
 }

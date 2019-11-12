@@ -1,15 +1,10 @@
-
-
-
 sealed abstract class Json
 final case class JsonObject(fields: List[(String, Json)]) extends Json
-final case class JsonArray(items: List[Json]) extends Json
-final case class JsonString(value: String) extends Json
-final case class JsonNumber(value: Double) extends Json
-final case class JsonBoolean(value: Boolean) extends Json
-case object JsonNull extends Json
-
-
+final case class JsonArray(items: List[Json])             extends Json
+final case class JsonString(value: String)                extends Json
+final case class JsonNumber(value: Double)                extends Json
+final case class JsonBoolean(value: Boolean)              extends Json
+case object JsonNull                                      extends Json
 
 object Json {
   def encode[A](value: A)(implicit encoder: JsonEncoder[A]): Json =
@@ -33,8 +28,6 @@ object Json {
     "\"" + str.replaceAll("\"", "\\\\\"") + "\""
 }
 
-
-
 trait JsonEncoder[A] {
   def encode(value: A): Json
 }
@@ -42,8 +35,6 @@ trait JsonEncoder[A] {
 trait JsonObjectEncoder[A] extends JsonEncoder[A] {
   def encode(value: A): JsonObject
 }
-
-
 
 object JsonEncoder {
   def pure[A](func: A => Json): JsonEncoder[A] =
@@ -57,9 +48,6 @@ object JsonEncoder {
       def encode(value: A): JsonObject =
         func(value)
     }
-
-
-
   // implicit val stringEnc: JsonEncoder[String] =
   //   pure(str => JsonString(str))
 
@@ -71,9 +59,6 @@ object JsonEncoder {
 
   // implicit val booleanEnc: JsonEncoder[Boolean] =
   //   pure(bool => JsonBoolean(bool))
-
-
-
   // implicit val hnilEnc: JsonObjectEncoder[HNil] =
   //   pureObj(hnil => JsonObject(Nil))
 
@@ -87,18 +72,16 @@ object JsonEncoder {
   // implicit def genericEnc // ...
 }
 
-
-
 final case class Employee(
-  name    : String,
-  number  : Int,
-  manager : Boolean
+  name: String,
+  number: Int,
+  manager: Boolean
 )
 
 final case class IceCream(
-  name        : String,
-  numCherries : Int,
-  inCone      : Boolean
+  name: String,
+  numCherries: Int,
+  inCone: Boolean
 )
 
 sealed trait Shape
@@ -111,8 +94,6 @@ final case class Rectangle(
 final case class Circle(
   radius: Double
 ) extends Shape
-
-
 
 object Main extends Demo {
 
@@ -127,5 +108,3 @@ object Main extends Demo {
   val shape2: Shape = Circle(1)
 
 }
-
-
