@@ -8,8 +8,7 @@ scalacOptions in Global ++= Seq(
   "-feature",
   "-Xlint",
   "-Xfatal-warnings",
-  "-Ywarn-dead-code",
-  "-Yliteral-types"
+  "-Ywarn-dead-code"
 )
 
 libraryDependencies in Global ++= Seq(
