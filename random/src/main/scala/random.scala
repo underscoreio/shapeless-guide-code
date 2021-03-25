@@ -19,7 +19,7 @@ object Random {
     createRandom(scala.util.Random.nextInt(10))
 
   implicit val booleanRandom: Random[Boolean] =
-    createRandom(scala.util.Random.nextBoolean)
+    createRandom(scala.util.Random.nextBoolean())
 
   implicit val charRandom: Random[Char] =
     createRandom(('A'.toInt + scala.util.Random.nextInt(26)).toChar)
@@ -66,7 +66,7 @@ object Random {
       // TODO: Modify this probability
       // to ensure all tails of this coproduct
       // are weighted equally!
-      if (scala.util.Random.nextDouble < 0.5) {
+      if (scala.util.Random.nextDouble() < 0.5) {
         Inl(hRandom.get)
       } else {
         Inr(tRandom.value.get)
