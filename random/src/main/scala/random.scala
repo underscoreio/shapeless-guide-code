@@ -19,7 +19,7 @@ object Random {
     createRandom(scala.util.Random.nextInt(10))
 
   implicit val booleanRandom: Random[Boolean] =
-    createRandom(scala.util.Random.nextBoolean)
+    createRandom(scala.util.Random.nextBoolean())
 
   implicit val charRandom: Random[Char] =
     createRandom(('A'.toInt + scala.util.Random.nextInt(26)).toChar)
@@ -68,7 +68,7 @@ object Random {
     val len  = 1 + tLengthAsInt()
     val prob = 1.0 / len
     createRandom {
-      if(scala.util.Random.nextDouble < prob) {
+      if(scala.util.Random.nextDouble() < prob) {
         Inl(hRandom.get)
       } else {
         Inr(tRandom.value.get)
