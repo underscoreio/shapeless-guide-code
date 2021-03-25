@@ -6,9 +6,17 @@ scalacOptions in Global ++= Seq(
   "UTF-8",
   "-unchecked",
   "-feature",
-  "-Xlint",
-  "-Xfatal-warnings",
-  "-Ywarn-dead-code"
+  // Linter configuration (replaces -Xfatal-warnings, -Xlint, etc). More info here:
+  // https://www.scala-lang.org/2021/01/12/configuring-and-suppressing-warnings.html
+  List(
+    "-Wconf",
+    List(
+      // We need to disable the byname-implicit warning in Scala 2.13.3+
+      "cat=lint-byname-implicit:silent",
+      // Anything else can be an error, though
+      "any:error",
+    ).mkString(",")
+  ).mkString(":")
 )
 
 libraryDependencies in Global ++= Seq(
