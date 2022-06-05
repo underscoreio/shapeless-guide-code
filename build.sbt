@@ -32,6 +32,9 @@ libraryDependencies in Global ++= Seq(
 lazy val common =
   project.in(file("common"))
 
+lazy val helloworld =
+  project.in(file("helloworld")).dependsOn(common)
+
 lazy val representations =
   project.in(file("representations")).dependsOn(common)
 
@@ -57,6 +60,7 @@ lazy val mapping =
   project.in(file("mapping")).dependsOn(common)
 
 lazy val root = project.in(file(".")).aggregate(
+  helloworld,
   representations,
   csv,
   literaltypes,
